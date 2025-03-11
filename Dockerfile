@@ -11,17 +11,23 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     vim \
+    libicu-dev \
+    libxml2-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd pdo_pgsql pgsql zip opcache
+    && docker-php-ext-install -j$(nproc) gd pdo_pgsql pgsql zip opcache intl xml soap
 
 # Enable Apache modules
 RUN a2enmod rewrite
 
 # Configure PHP
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" \
     && sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 32M/' "$PHP_INI_DIR/php.ini" \
     && sed -i 's/post_max_size = 8M/post_max_size = 64M/' "$PHP_INI_DIR/php.ini" \
-    && sed -i 's/memory_limit = 128M/memory_limit = 256M/' "$PHP_INI_DIR/php.ini"
+    && sed -i 's/memory_limit = 128M/memory_limit = 256M/' "$PHP_INI_DIR/php.ini" \
+    && sed -i 's/;display_errors = Off/display_errors = On/' "$PHP_INI_DIR/php.ini" \
+    && sed -i 's/display_errors = Off/display_errors = On/' "$PHP_INI_DIR/php.ini" \
+    && sed -i 's/display_startup_errors = Off/display_startup_errors = On/' "$PHP_INI_DIR/php.ini" \
+    && sed -i 's/error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT/error_reporting = E_ALL/' "$PHP_INI_DIR/php.ini"
 
 # Set up document root
 ENV APACHE_DOCUMENT_ROOT /var/www/html/web
@@ -45,12 +51,17 @@ RUN composer install --prefer-dist --no-dev --optimize-autoloader --no-interacti
 
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www/html
+RUN find /var/www/html/web -type d -exec chmod 755 {} \;
+RUN find /var/www/html/web -type f -exec chmod 644 {} \;
 RUN chmod -R 755 /var/www/html/web/sites/default
 
 # Create files directory and set permissions
 RUN mkdir -p /var/www/html/web/sites/default/files \
     && chown -R www-data:www-data /var/www/html/web/sites/default/files \
     && chmod -R 775 /var/www/html/web/sites/default/files
+
+# Ensure settings.php is writable for installation
+RUN chmod 666 /var/www/html/web/sites/default/settings.php || echo "Settings.php not found, will be created during installation"
 
 # Create a script to start Apache on the correct port
 RUN echo '#!/bin/bash\n\
