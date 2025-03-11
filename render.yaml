@@ -12,6 +12,8 @@ services:
           property: connectionString
       - key: TRUSTED_HOST_PATTERNS
         value: "^.*\\.onrender\\.com$"
+      - key: HASH_SALT
+        generateValue: true
 
 databases:
   - name: drupal-db
