@@ -20,5 +20,5 @@ databases:
     databaseName: drupal
     user: drupal
     plan: free
-    postgresMajorVersion: "14"
+    postgresMajorVersion: "16"
     ipAllowList: [] 
