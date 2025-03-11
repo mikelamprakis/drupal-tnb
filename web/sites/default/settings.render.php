@@ -5,6 +5,11 @@
  * Render.com specific settings file.
  */
 
+// Enable detailed error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Parse the DATABASE_URL environment variable
 if (getenv('DATABASE_URL')) {
   $db_url = parse_url(getenv('DATABASE_URL'));
