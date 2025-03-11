@@ -41,7 +41,7 @@ COPY . .
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
 # Install dependencies and optimize autoloader
-RUN composer install --prefer-dist --no-dev --optimize-autoloader --no-interaction
+RUN composer install --prefer-dist --no-dev --optimize-autoloader --no-interaction --ignore-platform-reqs
 
 # Set proper permissions
 RUN chown -R www-data:www-data /var/www/html
