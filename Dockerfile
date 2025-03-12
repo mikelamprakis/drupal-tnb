@@ -49,6 +49,10 @@ COPY apache.conf /etc/apache2/sites-available/000-default.conf
 # Create a diagnostic page
 RUN echo '<?php phpinfo(); ?>' > /var/www/html/web/info.php
 
+# Add post-deployment script
+COPY post-deploy.sh /var/www/html/post-deploy.sh
+RUN chmod +x /var/www/html/post-deploy.sh
+
 # Create entrypoint script
 RUN echo '#!/bin/bash\n\
 echo "Setting Apache port to $PORT..."\n\
@@ -93,6 +97,9 @@ fi\n\
 \n\
 echo "Listing web directory contents:"\n\
 ls -la /var/www/html/web\n\
+\n\
+echo "Running post-deployment script..."\n\
+cd /var/www/html && ./post-deploy.sh\n\
 \n\
 echo "Starting Apache..."\n\
 apache2-foreground' > /usr/local/bin/entrypoint.sh \

@@ -33,6 +33,7 @@
         "drupal/drupal_cms_project": "~1.0.0",
         "drupal/drupal_cms_seo_tools": "~1.0.2",
         "drupal/drupal_cms_starter": "~1.0.2",
+        "drupal/jsonapi_extras": "^3.26",
         "drupal/project_browser": "@alpha",
         "drupal/scheduler": "^2.2",
         "drupal/webform": "@beta",
