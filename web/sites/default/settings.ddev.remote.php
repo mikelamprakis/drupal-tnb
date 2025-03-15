@@ -17,9 +17,12 @@ if (!empty($render_db_url)) {
   // Parse the database URL
   $db_url = parse_url($render_db_url);
   
+  // Extract database name from path correctly
+  $database = ltrim($db_url['path'], '/');
+  
   // Define the database connection
   $databases['default']['default'] = [
-    'database' => ltrim($db_url['path'], '/'),
+    'database' => $database,
     'username' => $db_url['user'],
     'password' => $db_url['pass'],
     'host' => $db_url['host'],
@@ -36,5 +39,6 @@ if (!empty($render_db_url)) {
   ];
   
   // Logging for debugging
+  error_log("Successfully overrode database connection to use remote Render PostgreSQL database");
   error_log("Remote database connection enabled with SSL: " . $db_url['host']);
 } 
