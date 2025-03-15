@@ -27,7 +27,11 @@ try {
   if (file_exists($app_root . '/' . $site_path . '/settings.php')) {
     echo "<p>✅ settings.php exists</p>";
     
-    // Include settings.php
+    // Include settings.php with properly defined variables
+    global $app_root, $site_path;
+    $app_root = $root_path;
+    $site_path = 'sites/default';
+    
     require_once $app_root . '/' . $site_path . '/settings.php';
     echo "<p>✅ settings.php loaded</p>";
     
@@ -36,9 +40,9 @@ try {
     if (file_exists($app_root . '/autoload.php')) {
       echo "<p>✅ autoload.php exists</p>";
       
-      // Include the autoloader
-      require_once $app_root . '/autoload.php';
-      echo "<p>✅ autoload.php loaded</p>";
+      // Include the autoloader and capture the return value
+      $autoloader = require_once $app_root . '/autoload.php';
+      echo "<p>✅ autoload.php loaded, autoloader captured</p>";
       
       // Try to use Drupal's kernel class
       echo "<p>Attempting to bootstrap Drupal...</p>";
