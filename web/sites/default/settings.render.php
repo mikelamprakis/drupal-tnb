@@ -22,6 +22,7 @@ if (getenv('DATABASE_URL')) {
     'port' => $db_url['port'] ?? 5432,
     'driver' => 'pgsql',
     'prefix' => '',
+    'sslmode' => 'require',
   ];
   
   // Set PostgreSQL specific settings
@@ -44,11 +45,11 @@ ini_set('memory_limit', '256M');
 // Enable verbose error logging in production temporarily if needed
 $config['system.logging']['error_level'] = 'verbose';
 
-// Hash salt
+// Hash salt - ensure this is set for every environment
 if (getenv('HASH_SALT')) {
   $settings['hash_salt'] = getenv('HASH_SALT');
 } else {
-  $settings['hash_salt'] = md5(getenv('DATABASE_URL') . __FILE__);
+  $settings['hash_salt'] = 'this-is-a-placeholder-salt-replace-in-production-' . md5(__FILE__);
 }
 
 // Set file paths
@@ -56,5 +57,5 @@ $settings['file_public_path'] = 'sites/default/files';
 $settings['file_private_path'] = '../private';
 $settings['file_temp_path'] = '/tmp';
 
-// Ensure file system is not hardened in production
+// Ensure file system is not hardened in production - use with caution
 $settings['skip_permissions_hardening'] = TRUE; 
