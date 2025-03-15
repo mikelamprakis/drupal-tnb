@@ -1,0 +1,8 @@
+web_environment:
+  - RENDER_DATABASE_URL=postgresql://drupal_db_user:05BDYXSFIuJCnc36KrSou0vWnXLVlyYM@dpg-cv89ebq3esus73a3t9d0-a.oregon-postgres.render.com/drupal_db
+webimage_extra_packages:
+  - postgresql-client
+  - php-pgsql
+hooks:
+  post-start:
+    - exec: composer install
